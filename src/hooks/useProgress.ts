@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 // SRS intervals in milliseconds
 const SRS_INTERVALS = [
@@ -87,11 +87,88 @@ function getWordsNeedingReview(words: Record<string, WordProgress>): WordProgres
   );
 }
 
+function syncToDb(p: UserProgress) {
+  fetch("/api/progress", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ progress: p }),
+  }).catch(() => {
+    // Silently fail — localStorage is the fallback
+  });
+}
+
+function mergeProgress(local: UserProgress, db: UserProgress): UserProgress {
+  // Merge words — keep whichever has more attempts (more recent activity)
+  const mergedWords: Record<string, WordProgress> = { ...local.words };
+  for (const [id, dbWord] of Object.entries(db.words || {})) {
+    const localWord = mergedWords[id];
+    if (!localWord || dbWord.attempts > localWord.attempts || dbWord.lastSeen > localWord.lastSeen) {
+      mergedWords[id] = dbWord;
+    }
+  }
+
+  // Quiz history — deduplicate by date+score
+  const quizSet = new Set(local.quizHistory.map((q) => `${q.date}-${q.score}-${q.total}`));
+  const mergedQuiz = [...local.quizHistory];
+  for (const q of db.quizHistory || []) {
+    const key = `${q.date}-${q.score}-${q.total}`;
+    if (!quizSet.has(key)) {
+      mergedQuiz.push(q);
+      quizSet.add(key);
+    }
+  }
+
+  // Activity log — merge by date
+  const actMap = new Map<string, number>();
+  for (const a of [...(local.activityLog || []), ...(db.activityLog || [])]) {
+    actMap.set(a.date, Math.max(actMap.get(a.date) || 0, a.count));
+  }
+  const mergedActivity = Array.from(actMap.entries())
+    .map(([date, count]) => ({ date, count }))
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .slice(-90);
+
+  return {
+    words: mergedWords,
+    quizHistory: mergedQuiz.sort((a, b) => a.date.localeCompare(b.date)),
+    dailyStreak: Math.max(local.dailyStreak, db.dailyStreak || 0),
+    lastActive: local.lastActive > (db.lastActive || "") ? local.lastActive : db.lastActive || "",
+    totalWordsLearned: Object.values(mergedWords).filter((w) => w.known).length,
+    dailyGoal: local.dailyGoal.date >= (db.dailyGoal?.date || "") ? local.dailyGoal : db.dailyGoal || local.dailyGoal,
+    activityLog: mergedActivity,
+  };
+}
+
 export function useProgress() {
   const [progress, setProgress] = useState<UserProgress>(getDefaultProgress);
+  const syncTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isSyncing = useRef(false);
 
+  // Load from localStorage first, then fetch from DB
   useEffect(() => {
-    setProgress(loadProgress());
+    const local = loadProgress();
+    setProgress(local);
+
+    // Fetch from DB and merge (DB wins)
+    fetch("/api/progress")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.progress) {
+          const merged = mergeProgress(local, data.progress);
+          setProgress(merged);
+          if (typeof window !== "undefined") {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+          }
+        } else {
+          // No DB data yet — push local to DB
+          if (Object.keys(local.words).length > 0) {
+            syncToDb(local);
+          }
+        }
+      })
+      .catch(() => {
+        // Offline — use local data silently
+      });
   }, []);
 
   const save = useCallback((p: UserProgress) => {
@@ -99,6 +176,9 @@ export function useProgress() {
     if (typeof window !== "undefined") {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
     }
+    // Debounced DB sync
+    if (syncTimer.current) clearTimeout(syncTimer.current);
+    syncTimer.current = setTimeout(() => syncToDb(p), 2000);
   }, []);
 
   const updateWord = useCallback(

@@ -1,4 +1,4 @@
-# VocabMaster — GRE Vocabulary Prep
+# VerbalHelper — GRE Vocabulary Prep
 
 A Magoosh-inspired GRE vocabulary preparation app built with Next.js. Learn 1,113 words across 38 groups using flashcards, quizzes, spaced repetition, and AI-powered features.
 

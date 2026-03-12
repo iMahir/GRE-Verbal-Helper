@@ -146,7 +146,7 @@ Rules for distractors:
           {
             role: "system",
             content:
-              "You are VocabMaster AI, a helpful GRE vocabulary tutor. Help students learn and remember GRE words. Be encouraging, concise, and use examples. If asked about non-GRE topics, gently redirect to vocabulary study.",
+              "You are VerbalHelper AI, a helpful GRE vocabulary tutor. Help students learn and remember GRE words. Be encouraging, concise, and use examples. If asked about non-GRE topics, gently redirect to vocabulary study.",
           },
           ...(body.messages || []),
         ];

@@ -24,7 +24,7 @@ export default function OnboardingModal() {
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={dismiss} />
       <div className="relative card p-6 sm:p-8 max-w-md w-full animate-in border-zinc-700 dark:border-zinc-700">
         <h2 className="text-xl font-semibold text-zinc-100 mb-2">
-          Welcome to VocabMaster
+          Welcome to VerbalHelper
         </h2>
         <p className="text-zinc-400 text-sm mb-5 leading-relaxed">
           Master 1,100+ GRE vocabulary words with AI-powered learning.

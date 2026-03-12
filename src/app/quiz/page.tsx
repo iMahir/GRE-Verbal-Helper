@@ -195,7 +195,7 @@ export default function QuizPage() {
           <div className="flex flex-wrap gap-1.5">
             <button
               onClick={() => setSelectedGroup(null)}
-              className={`px-3 py-1.5 rounded-md text-xs transition-colors ${
+              className={`px-3 py-2 rounded-md text-xs transition-colors ${
                 selectedGroup === null
                   ? "bg-zinc-100 text-zinc-900"
                   : "bg-zinc-900 text-zinc-500 hover:text-zinc-300 border border-zinc-800"
@@ -207,7 +207,7 @@ export default function QuizPage() {
               <button
                 key={g.id}
                 onClick={() => setSelectedGroup(g.id)}
-                className={`px-3 py-1.5 rounded-md text-xs transition-colors ${
+                className={`px-3 py-2 rounded-md text-xs transition-colors ${
                   selectedGroup === g.id
                     ? "bg-zinc-100 text-zinc-900"
                     : "bg-zinc-900 text-zinc-500 hover:text-zinc-300 border border-zinc-800"
@@ -250,7 +250,7 @@ export default function QuizPage() {
               <button
                 key={n}
                 onClick={() => setQuestionCount(n)}
-                className={`px-3 py-1.5 rounded-md text-xs transition-colors ${
+                className={`px-3 py-2 rounded-md text-xs transition-colors ${
                   questionCount === n
                     ? "bg-zinc-100 text-zinc-900"
                     : "bg-zinc-900 text-zinc-500 hover:text-zinc-300 border border-zinc-800"
@@ -327,21 +327,21 @@ export default function QuizPage() {
       : "Which word matches this definition?";
 
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
-      <div className="flex items-center justify-between mb-6">
+    <div className="max-w-2xl mx-auto px-3 sm:px-4 md:px-6 py-4 md:py-8">
+      <div className="flex items-center justify-between mb-4 md:mb-6">
         <button
           onClick={() => setStarted(false)}
           className="text-zinc-600 hover:text-zinc-300 text-xs"
         >
           ✕ End
         </button>
-        <p className="text-xs text-zinc-500">
+        <p className="text-[11px] sm:text-xs text-zinc-500">
           {currentQ + 1} / {questions.length}
         </p>
-        <p className="text-xs text-zinc-400">{score} correct</p>
+        <p className="text-[11px] sm:text-xs text-zinc-400">{score} correct</p>
       </div>
 
-      <div className="w-full h-1 bg-zinc-800 rounded-full overflow-hidden mb-8">
+      <div className="w-full h-1 bg-zinc-800 rounded-full overflow-hidden mb-6 md:mb-8">
         <div
           className="h-full bg-zinc-400 rounded-full transition-all"
           style={{ width: `${((currentQ + 1) / questions.length) * 100}%` }}
@@ -356,8 +356,8 @@ export default function QuizPage() {
           exit={{ opacity: 0, x: -30 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
         >
-          <div className="card p-6 text-center mb-6">
-            <p className="text-[11px] text-zinc-600 mb-2">{promptLabel}</p>
+          <div className="card p-4 md:p-6 text-center mb-4 md:mb-6">
+            <p className="text-[10px] md:text-[11px] text-zinc-600 mb-2">{promptLabel}</p>
             <p className={`text-xl font-semibold ${
               q.type === "definition" ? "text-zinc-100 capitalize" : "text-zinc-200"
             }`}>
@@ -383,7 +383,7 @@ export default function QuizPage() {
                   key={i}
                   onClick={() => handleSelect(i)}
                   disabled={selected !== null}
-                  className={`${optClass} w-full text-left transition-all ${
+                  className={`${optClass} w-full text-left flex items-center transition-all ${
                     q.type === "word" ? "capitalize font-medium text-zinc-200" : "text-sm text-zinc-300"
                   }`}
                 >
@@ -393,10 +393,10 @@ export default function QuizPage() {
                   </span>
                   {opt}
                   {selected !== null && i === q.correctIndex && (
-                    <span className="float-right text-green-400 text-xs font-medium">Correct answer</span>
+                    <span className="ml-auto pl-2 text-green-400 text-xs font-medium whitespace-nowrap">Correct answer</span>
                   )}
                   {selected !== null && i === selected && i !== q.correctIndex && (
-                    <span className="float-right text-red-400 text-xs font-medium">Your pick</span>
+                    <span className="ml-auto pl-2 text-red-400 text-xs font-medium whitespace-nowrap">Your pick</span>
                   )}
                 </button>
               );

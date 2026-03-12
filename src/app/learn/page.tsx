@@ -319,7 +319,7 @@ export default function LearnPage() {
           <div className="flex flex-wrap gap-1.5">
             <button
               onClick={() => setSelectedGroup(null)}
-              className={`px-3 py-1.5 rounded-md text-xs transition-colors ${
+              className={`px-3 py-2 rounded-md text-xs transition-colors ${
                 selectedGroup === null
                   ? "bg-zinc-100 text-zinc-900"
                   : "bg-zinc-900 text-zinc-500 hover:text-zinc-300 border border-zinc-800"
@@ -333,7 +333,7 @@ export default function LearnPage() {
                 <button
                   key={g.id}
                   onClick={() => setSelectedGroup(g.id)}
-                  className={`px-3 py-1.5 rounded-md text-xs transition-colors ${
+                  className={`px-3 py-2 rounded-md text-xs transition-colors ${
                     selectedGroup === g.id
                       ? "bg-zinc-100 text-zinc-900"
                       : "bg-zinc-900 text-zinc-500 hover:text-zinc-300 border border-zinc-800"
@@ -372,9 +372,9 @@ export default function LearnPage() {
   const correctOption = options.find((o) => o.isCorrect);
 
   return (
-    <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 py-8">
+    <div className="min-h-[80vh] flex flex-col items-center justify-center px-3 sm:px-4 py-4 md:py-8">
       {/* Session bar */}
-      <div className="flex items-center gap-6 mb-5 text-xs text-zinc-500">
+      <div className="flex items-center gap-3 sm:gap-6 mb-4 sm:mb-5 text-[11px] sm:text-xs text-zinc-500">
         <button onClick={() => setStarted(false)} className="hover:text-zinc-300 transition-colors">
           ← Exit
         </button>
@@ -388,33 +388,33 @@ export default function LearnPage() {
         {/* Header */}
         {answerState === "unanswered" ? (
           <div className="learn-header new">
-            <p className="text-zinc-400 font-medium">
+            <p className="text-zinc-400 font-medium text-sm">
               {progress.words[currentWord.id] ? "Review" : "New Word"}
             </p>
-            <p className="text-zinc-600 text-xs mt-0.5">Choose the definition</p>
+            <p className="text-zinc-600 text-[11px] mt-0.5">Choose the definition</p>
           </div>
         ) : answerState === "correct" ? (
           <div className="learn-header correct">
-            <p className="text-green-400 font-medium text-lg">Correct</p>
-            <p className="text-green-500/60 text-xs mt-0.5">Scheduled for later review</p>
+            <p className="text-green-400 font-medium text-base md:text-lg">Correct</p>
+            <p className="text-green-500/60 text-[11px] md:text-xs mt-0.5">Scheduled for later review</p>
           </div>
         ) : (
           <div className="learn-header incorrect">
-            <p className="text-red-400 font-medium text-lg">
+            <p className="text-red-400 font-medium text-base md:text-lg">
               {answerState === "unsure" ? "Skipped" : "Incorrect"}
             </p>
-            <p className="text-red-400/50 text-xs mt-0.5">Review the definition below</p>
+            <p className="text-red-400/50 text-[11px] md:text-xs mt-0.5">Review the definition below</p>
           </div>
         )}
 
         {/* Word */}
-        <div className="px-5 py-4 border-b border-zinc-800 flex items-center justify-between">
-          <p className="text-2xl font-semibold text-zinc-100 capitalize">
+        <div className="px-4 sm:px-5 py-3 md:py-4 border-b border-zinc-800 flex items-center justify-between">
+          <p className="text-xl sm:text-2xl font-semibold text-zinc-100 capitalize">
             {currentWord.word}
           </p>
           <button
             onClick={() => speakWord(currentWord.word)}
-            className="p-1.5 rounded-md hover:bg-zinc-800 text-zinc-600 hover:text-zinc-300 transition-colors"
+            className="p-2 md:p-1.5 rounded-md hover:bg-zinc-800 text-zinc-600 hover:text-zinc-300 transition-colors"
             title="Pronounce (P)"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -501,14 +501,14 @@ export default function LearnPage() {
         </p>
       )}
 
-      {/* Keyboard hints */}
+      {/* Keyboard hints — desktop only */}
       {answerState === "unanswered" && (
-        <p className="text-zinc-700 text-[10px] mt-4">
+        <p className="text-zinc-700 text-[10px] mt-4 hidden md:block">
           Press 1-4 to select · S to skip
         </p>
       )}
       {answerState !== "unanswered" && (
-        <p className="text-zinc-700 text-[10px] mt-4">
+        <p className="text-zinc-700 text-[10px] mt-4 hidden md:block">
           Enter for next · P to pronounce
         </p>
       )}

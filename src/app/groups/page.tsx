@@ -21,11 +21,11 @@ export default function GroupsPage() {
     : wordGroups;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+    <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 py-4 md:py-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 md:mb-6 gap-3 sm:gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-zinc-100">Groups</h1>
-          <p className="text-zinc-500 text-sm">
+          <h1 className="text-xl sm:text-2xl font-semibold text-zinc-100">Groups</h1>
+          <p className="text-zinc-500 text-xs sm:text-sm">
             {wordGroups.length} groups · {allWords.length} words
           </p>
         </div>
@@ -34,11 +34,11 @@ export default function GroupsPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search groups or words..."
-          className="px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-zinc-600 text-sm w-full sm:w-64"
+          className="px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-zinc-600 text-xs sm:text-sm w-full sm:w-64"
         />
       </div>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3">
         {filtered.map((group) => {
           const wordIds = group.words.map((w) => w.id);
           const learned = wordIds.filter((id) => progress.words[id]?.known).length;
@@ -49,23 +49,23 @@ export default function GroupsPage() {
             <Link
               key={group.id}
               href={`/groups/${group.id}`}
-              className={`card p-4 block transition-colors ${
+              className={`card p-3 md:p-4 block transition-colors ${
                 pct === 100 ? "border-zinc-600" : ""
               }`}
             >
-              <div className="flex items-start justify-between">
+              <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs text-zinc-500 uppercase tracking-wider mb-0.5">
+                  <p className="text-[10px] md:text-xs text-zinc-500 uppercase tracking-wider mb-0.5">
                     {group.name}
                   </p>
-                  <p className="text-xs text-zinc-600">
+                  <p className="text-[11px] md:text-xs text-zinc-600">
                     {group.words.length} words
                   </p>
                 </div>
                 <ProgressRing percentage={pct} size={48} stroke={3} />
               </div>
 
-              <div className="mt-3">
+              <div className="mt-2 md:mt-3">
                 <div className="h-1 bg-zinc-800 rounded-full overflow-hidden">
                   <div
                     className="h-full rounded-full transition-all duration-500"
@@ -75,7 +75,7 @@ export default function GroupsPage() {
                     }}
                   />
                 </div>
-                <div className="flex justify-between mt-1.5 text-[11px] text-zinc-600">
+                <div className="flex justify-between mt-1.5 text-[10px] md:text-[11px] text-zinc-600">
                   <span>{learned} learned</span>
                   <span>{seen} seen</span>
                 </div>

@@ -67,16 +67,16 @@ function FlashcardsInner() {
 
   if (!started) {
     return (
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
-        <h1 className="text-2xl font-semibold text-zinc-100 mb-1">Flashcards</h1>
-        <p className="text-zinc-500 text-sm mb-8">Review vocabulary with flip cards</p>
+      <div className="max-w-3xl mx-auto px-3 sm:px-4 md:px-6 py-4 md:py-8">
+        <h1 className="text-xl sm:text-2xl font-semibold text-zinc-100 mb-1">Flashcards</h1>
+        <p className="text-zinc-500 text-xs sm:text-sm mb-6 md:mb-8">Review vocabulary with flip cards</p>
 
-        <div className="mb-6">
-          <h2 className="text-sm font-medium text-zinc-400 mb-3">Group</h2>
-          <div className="flex flex-wrap gap-1.5">
+        <div className="mb-4 md:mb-6">
+          <h2 className="text-xs md:text-sm font-medium text-zinc-400 mb-2 md:mb-3">Group</h2>
+          <div className="flex flex-wrap gap-1 sm:gap-1.5">
             <button
               onClick={() => setSelectedGroup(null)}
-              className={`px-3 py-1.5 rounded-md text-xs transition-colors ${
+              className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs transition-colors ${
                 selectedGroup === null
                   ? "bg-zinc-100 text-zinc-900"
                   : "bg-zinc-900 text-zinc-500 hover:text-zinc-300 border border-zinc-800"
@@ -88,7 +88,7 @@ function FlashcardsInner() {
               <button
                 key={g.id}
                 onClick={() => setSelectedGroup(g.id)}
-                className={`px-3 py-1.5 rounded-md text-xs transition-colors ${
+                className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs transition-colors ${
                   selectedGroup === g.id
                     ? "bg-zinc-100 text-zinc-900"
                     : "bg-zinc-900 text-zinc-500 hover:text-zinc-300 border border-zinc-800"
@@ -100,8 +100,8 @@ function FlashcardsInner() {
           </div>
         </div>
 
-        <div className="mb-8">
-          <h2 className="text-sm font-medium text-zinc-400 mb-3">Mode</h2>
+        <div className="mb-6 md:mb-8">
+          <h2 className="text-xs md:text-sm font-medium text-zinc-400 mb-2 md:mb-3">Mode</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {([
               { key: "all", label: "All Words", desc: "Study everything" },
@@ -112,12 +112,12 @@ function FlashcardsInner() {
               <button
                 key={m.key}
                 onClick={() => setMode(m.key)}
-                className={`card p-3 text-left ${
+                className={`card p-2.5 md:p-3 text-left ${
                   mode === m.key ? "border-zinc-500 bg-zinc-900" : ""
                 }`}
               >
-                <p className="text-sm font-medium text-zinc-200">{m.label}</p>
-                <p className="text-[11px] text-zinc-600">{m.desc}</p>
+                <p className="text-xs md:text-sm font-medium text-zinc-200">{m.label}</p>
+                <p className="text-[10px] md:text-[11px] text-zinc-600">{m.desc}</p>
               </button>
             ))}
           </div>
@@ -125,7 +125,7 @@ function FlashcardsInner() {
 
         <button
           onClick={() => { setIndex(0); setStarted(true); }}
-          className="btn-primary px-6 py-2.5"
+          className="btn-primary px-4 sm:px-6 py-2 md:py-2.5 text-xs md:text-sm"
         >
           Start ({selectedGroup
             ? wordGroups.find((g) => g.id === selectedGroup)?.words.length
@@ -188,13 +188,13 @@ function FlashcardsInner() {
         <button
           onClick={() => setIndex(Math.max(0, index - 1))}
           disabled={index === 0}
-          className="text-zinc-600 hover:text-zinc-300 disabled:opacity-20 disabled:cursor-not-allowed text-xs"
+          className="text-zinc-600 hover:text-zinc-300 disabled:opacity-20 disabled:cursor-not-allowed text-xs py-2 px-3 -ml-3 rounded-lg"
         >
           ← Previous
         </button>
         <button
           onClick={() => handleNext(false)}
-          className="text-zinc-600 hover:text-zinc-300 text-xs"
+          className="text-zinc-600 hover:text-zinc-300 text-xs py-2 px-3 -mr-3 rounded-lg"
         >
           Skip →
         </button>

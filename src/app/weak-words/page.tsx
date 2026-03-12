@@ -63,18 +63,18 @@ export default function WeakWordsPage() {
   ];
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
-      <h1 className="text-2xl font-semibold text-zinc-100 mb-1">Review</h1>
-      <p className="text-zinc-500 text-sm mb-6">
+    <div className="max-w-3xl mx-auto px-3 sm:px-4 md:px-6 py-4 md:py-8">
+      <h1 className="text-xl sm:text-2xl font-semibold text-zinc-100 mb-1">Review</h1>
+      <p className="text-zinc-500 text-xs sm:text-sm mb-4 md:mb-6">
         Words that need attention based on SRS and difficulty
       </p>
 
-      <div className="flex gap-1.5 mb-6 flex-wrap">
+      <div className="flex gap-1 mb-4 md:mb-6 flex-wrap">
         {filters.map((f) => (
           <button
             key={f.key}
             onClick={() => setFilter(f.key)}
-            className={`px-3 py-1.5 rounded-md text-xs transition-colors ${
+            className={`px-2.5 sm:px-3 py-1.5 md:py-2 rounded-md text-xs transition-colors ${
               filter === f.key
                 ? "bg-zinc-100 text-zinc-900"
                 : "bg-zinc-900 text-zinc-500 hover:text-zinc-300 border border-zinc-800"
@@ -127,7 +127,7 @@ export default function WeakWordsPage() {
                       {w.definition}
                     </p>
                   </div>
-                  <div className="flex items-center gap-3 shrink-0">
+                  <div className="flex items-center gap-2 sm:gap-3 shrink-0 flex-wrap justify-end">
                     {wp && (
                       <>
                         <span

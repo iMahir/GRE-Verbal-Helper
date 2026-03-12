@@ -86,6 +86,11 @@ export default function SettingsPage() {
         setError("Failed to reset progress");
         return;
       }
+      // Clear browser cache if resetting the current user's own progress
+      const targetUser = users.find((u) => u._id === userId);
+      if (targetUser && targetUser.username === user?.username) {
+        localStorage.removeItem("gre-vocab-progress");
+      }
       setMessage("Progress reset successfully (snapshot saved)");
       loadProgressInfo(userId);
     } catch {
@@ -166,7 +171,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 pt-20 pb-12 px-4">
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 pt-6 md:pt-20 pb-12 px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -282,7 +287,7 @@ export default function SettingsPage() {
                         <div className="px-3 pb-3 pt-2 space-y-3 border-t border-zinc-100 dark:border-zinc-800">
                           {/* Current progress info */}
                           {progressInfo[u._id]?.current ? (
-                            <div className="flex items-center gap-3 text-xs text-zinc-500 dark:text-zinc-400">
+                            <div className="flex items-center gap-2 sm:gap-3 text-xs text-zinc-500 dark:text-zinc-400 flex-wrap">
                               <span>{progressInfo[u._id].current!.wordCount} words tracked</span>
                               <span className="text-zinc-300 dark:text-zinc-600">·</span>
                               <span>{progressInfo[u._id].current!.learnedCount} learned</span>

@@ -32,7 +32,7 @@ export default function RootLayout({
           <AuthProvider>
             <Navbar />
             <OnboardingModal />
-            <main className="pt-14 pb-20 md:pb-0 min-h-screen">{children}</main>
+            <main className="pt-0 pb-20 md:pt-14 md:pb-0 min-h-screen">{children}</main>
           </AuthProvider>
         </ThemeProvider>
       </body>

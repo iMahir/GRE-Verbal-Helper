@@ -80,28 +80,41 @@ export default function Navbar() {
 
       {/* Mobile bottom nav */}
       <div className="bottom-nav md:hidden">
-        <div className="flex items-center justify-around px-2">
-          {links.slice(0, 5).map((link) => {
+        <div className="flex items-center justify-around px-1">
+          {links.map((link) => {
             const active = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
+            const icons: Record<string, string> = { "/": "◉", "/learn": "◎", "/groups": "▦", "/flashcards": "◫", "/quiz": "✎", "/ai": "◆", "/weak-words": "↻" };
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`flex flex-col items-center gap-0.5 py-1.5 px-2 text-[10px] font-medium transition-colors ${
+                className={`flex flex-col items-center gap-0.5 py-2 px-1.5 min-w-[40px] text-[10px] font-medium transition-colors ${
                   active ? "text-zinc-100" : "text-zinc-600"
                 }`}
               >
-                <span className="text-sm">
-                  {link.href === "/" && "◉"}
-                  {link.href === "/learn" && "◎"}
-                  {link.href === "/groups" && "▦"}
-                  {link.href === "/flashcards" && "◫"}
-                  {link.href === "/quiz" && "✎"}
-                </span>
+                <span className="text-sm">{icons[link.href]}</span>
                 {link.label}
               </Link>
             );
           })}
+          {mounted && (
+            <button
+              onClick={toggleTheme}
+              className="flex flex-col items-center gap-0.5 py-2 px-1.5 min-w-[40px] text-[10px] font-medium text-zinc-600 transition-colors"
+            >
+              <span className="text-sm">{theme === "dark" ? "☀" : "☾"}</span>
+              Theme
+            </button>
+          )}
+          {user && (
+            <button
+              onClick={logout}
+              className="flex flex-col items-center gap-0.5 py-2 px-1.5 min-w-[40px] text-[10px] font-medium text-zinc-600 transition-colors"
+            >
+              <span className="text-sm">⏻</span>
+              Out
+            </button>
+          )}
         </div>
       </div>
     </>

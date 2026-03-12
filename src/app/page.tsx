@@ -82,17 +82,17 @@ export default function Dashboard() {
     : 0;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+    <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 py-4 md:py-8">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-zinc-100 mb-1">Dashboard</h1>
-        <p className="text-zinc-500 text-sm">
+      <div className="mb-6 md:mb-8">
+        <h1 className="text-xl sm:text-2xl font-semibold text-zinc-100 mb-1">Dashboard</h1>
+        <p className="text-zinc-500 text-xs sm:text-sm">
           {stats.totalWords} words · {wordGroups.length} groups
         </p>
       </div>
 
       {/* Stats row */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-2 sm:gap-3 mb-6 md:mb-8">
         <StatCard label="Learned" value={stats.wordsLearned} sub={`/ ${stats.totalWords}`} />
         <StatCard label="Seen" value={stats.wordsSeen} sub={`${Math.round((stats.wordsSeen / stats.totalWords) * 100)}%`} />
         <StatCard label="Streak" value={progress.dailyStreak} sub="days" />
@@ -100,24 +100,24 @@ export default function Dashboard() {
         <StatCard label="Review Due" value={stats.reviewDue} sub={stats.hardWords > 0 ? `${stats.hardWords} hard` : "on track"} />
       </div>
 
-      <div className="grid md:grid-cols-3 gap-4 mb-8">
+      <div className="grid md:grid-cols-3 gap-3 md:gap-4 mb-6 md:mb-8">
         {/* Progress + Daily Goal */}
-        <div className="card p-5">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-medium text-zinc-400">Progress</h3>
-            <ProgressRing percentage={overallPercent} size={64} stroke={5} />
+        <div className="card p-4 md:p-5">
+          <div className="flex items-center justify-between mb-3 md:mb-4">
+            <h3 className="text-xs md:text-sm font-medium text-zinc-400">Progress</h3>
+            <ProgressRing percentage={overallPercent} size={56} stroke={4} />
           </div>
-          <p className="text-zinc-500 text-xs mb-4">
+          <p className="text-zinc-500 text-xs mb-3 md:mb-4">
             {stats.wordsLearned} of {stats.totalWords} mastered
           </p>
 
           {/* Daily goal bar */}
-          <div className="pt-4 border-t border-zinc-800">
+          <div className="pt-3 md:pt-4 border-t border-zinc-800">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs text-zinc-500">Today&apos;s goal</span>
-              <span className="text-xs text-zinc-400">{dailyGoal.wordsToday}/{dailyGoal.target}</span>
+              <span className="text-xs text-zinc-400 font-medium">{dailyGoal.wordsToday}/{dailyGoal.target}</span>
             </div>
-            <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+            <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
               <div
                 className="h-full bg-zinc-100 rounded-full transition-all duration-500"
                 style={{ width: `${dailyPercent}%` }}
@@ -127,37 +127,37 @@ export default function Dashboard() {
         </div>
 
         {/* Quick actions */}
-        <div className="card p-5">
-          <h3 className="text-sm font-medium text-zinc-400 mb-3">Quick Start</h3>
-          <div className="space-y-2">
-            <Link href="/learn" className="block p-3 rounded-lg border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900 transition-colors">
-              <p className="text-sm font-medium text-zinc-200">Learn Words</p>
-              <p className="text-xs text-zinc-600">AI-powered quizzes</p>
+        <div className="card p-4 md:p-5">
+          <h3 className="text-xs md:text-sm font-medium text-zinc-400 mb-2 md:mb-3">Quick Start</h3>
+          <div className="space-y-1.5">
+            <Link href="/learn" className="block p-2.5 md:p-3 rounded-lg border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900 transition-colors">
+              <p className="text-xs md:text-sm font-medium text-zinc-200">Learn Words</p>
+              <p className="text-[11px] md:text-xs text-zinc-600">AI-powered quizzes</p>
             </Link>
-            <Link href="/flashcards" className="block p-3 rounded-lg border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900 transition-colors">
-              <p className="text-sm font-medium text-zinc-200">Flashcards</p>
-              <p className="text-xs text-zinc-600">Review with flip cards</p>
+            <Link href="/flashcards" className="block p-2.5 md:p-3 rounded-lg border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900 transition-colors">
+              <p className="text-xs md:text-sm font-medium text-zinc-200">Flashcards</p>
+              <p className="text-[11px] md:text-xs text-zinc-600">Review with flip cards</p>
             </Link>
-            <Link href="/quiz" className="block p-3 rounded-lg border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900 transition-colors">
-              <p className="text-sm font-medium text-zinc-200">Quiz</p>
-              <p className="text-xs text-zinc-600">Test your knowledge</p>
+            <Link href="/quiz" className="block p-2.5 md:p-3 rounded-lg border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900 transition-colors">
+              <p className="text-xs md:text-sm font-medium text-zinc-200">Quiz</p>
+              <p className="text-[11px] md:text-xs text-zinc-600">Test your knowledge</p>
             </Link>
             {stats.reviewDue > 0 && (
-              <Link href="/weak-words" className="block p-3 rounded-lg border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900 transition-colors">
-                <p className="text-sm font-medium text-zinc-200">Review Due</p>
-                <p className="text-xs text-zinc-600">{stats.reviewDue} words need review</p>
+              <Link href="/weak-words" className="block p-2.5 md:p-3 rounded-lg border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900 transition-colors">
+                <p className="text-xs md:text-sm font-medium text-zinc-200">Review Due</p>
+                <p className="text-[11px] md:text-xs text-zinc-600">{stats.reviewDue} words need review</p>
               </Link>
             )}
           </div>
         </div>
 
         {/* Recent activity */}
-        <div className="card p-5">
-          <h3 className="text-sm font-medium text-zinc-400 mb-3">
+        <div className="card p-4 md:p-5">
+          <h3 className="text-xs md:text-sm font-medium text-zinc-400 mb-2 md:mb-3">
             {recentGroups.length > 0 ? "Recent Groups" : "Get Started"}
           </h3>
           {recentGroups.length > 0 ? (
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               {recentGroups.map((g) => {
                 const gp = Object.values(progress.words).filter((w) => {
                   const word = allWords.find((aw) => aw.id === w.wordId);
@@ -165,10 +165,10 @@ export default function Dashboard() {
                 });
                 const learned = gp.filter((w) => w.known).length;
                 return (
-                  <Link key={g.id} href={`/groups/${g.id}`} className="block p-2.5 rounded-lg hover:bg-zinc-900 transition-colors">
+                  <Link key={g.id} href={`/groups/${g.id}`} className="block p-2 md:p-2.5 rounded-lg hover:bg-zinc-900 transition-colors">
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-zinc-300">{g.name}</span>
-                      <span className="text-xs text-zinc-600">{learned}/{g.words.length}</span>
+                      <span className="text-xs md:text-sm text-zinc-300 truncate">{g.name}</span>
+                      <span className="text-[10px] md:text-xs text-zinc-600 ml-2 whitespace-nowrap">{learned}/{g.words.length}</span>
                     </div>
                     <div className="mt-1.5 h-1 bg-zinc-800 rounded-full overflow-hidden">
                       <div className="h-full bg-zinc-500 rounded-full transition-all" style={{ width: `${(learned / g.words.length) * 100}%` }} />
@@ -178,56 +178,56 @@ export default function Dashboard() {
               })}
             </div>
           ) : (
-            <div className="text-center py-6">
-              <p className="text-zinc-600 text-sm mb-3">Start learning to track progress</p>
-              <Link href="/groups" className="btn-primary text-sm">Browse Groups</Link>
+            <div className="text-center py-4">
+              <p className="text-zinc-600 text-xs mb-2">Start learning to track progress</p>
+              <Link href="/groups" className="btn-primary text-xs">Browse Groups</Link>
             </div>
           )}
         </div>
       </div>
 
       {/* Activity Heatmap */}
-      <div className="card p-5 mb-8">
-        <h3 className="text-sm font-medium text-zinc-400 mb-3">Activity</h3>
-        <div className="flex flex-wrap gap-[3px]">
+      <div className="card p-4 md:p-5 mb-6 md:mb-8">
+        <h3 className="text-xs md:text-sm font-medium text-zinc-400 mb-3">Activity</h3>
+        <div className="flex flex-wrap gap-[2px] sm:gap-[3px] overflow-x-auto pb-2">
           {heatmapData.map((d) => {
             const level = d.count === 0 ? "" : d.count <= 3 ? "l1" : d.count <= 8 ? "l2" : d.count <= 15 ? "l3" : d.count <= 25 ? "l4" : "l5";
             return (
               <div
                 key={d.date}
-                className={`heatmap-cell ${level}`}
+                className={`heatmap-cell ${level} flex-shrink-0`}
                 title={`${d.date}: ${d.count} words`}
               />
             );
           })}
         </div>
-        <div className="flex items-center gap-2 mt-3 text-[10px] text-zinc-600">
+        <div className="flex items-center gap-1 mt-3 text-[9px] sm:text-[10px] text-zinc-600 overflow-x-auto pb-1">
           <span>Less</span>
-          <div className="heatmap-cell" />
-          <div className="heatmap-cell l1" />
-          <div className="heatmap-cell l2" />
-          <div className="heatmap-cell l3" />
-          <div className="heatmap-cell l4" />
-          <div className="heatmap-cell l5" />
+          <div className="heatmap-cell flex-shrink-0" />
+          <div className="heatmap-cell l1 flex-shrink-0" />
+          <div className="heatmap-cell l2 flex-shrink-0" />
+          <div className="heatmap-cell l3 flex-shrink-0" />
+          <div className="heatmap-cell l4 flex-shrink-0" />
+          <div className="heatmap-cell l5 flex-shrink-0" />
           <span>More</span>
         </div>
       </div>
 
       {/* Quiz Score Trend */}
       {quizTrend.length > 0 && (
-        <div className="card p-5 mb-8">
-          <h3 className="text-sm font-medium text-zinc-400 mb-3">Quiz Scores</h3>
-          <div className="flex items-end gap-2 h-24">
+        <div className="card p-4 md:p-5 mb-6 md:mb-8">
+          <h3 className="text-xs md:text-sm font-medium text-zinc-400 mb-3">Quiz Scores</h3>
+          <div className="flex items-end gap-1.5 md:gap-2 h-20 md:h-24">
             {quizTrend.map((q, i) => (
               <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                <span className="text-[10px] text-zinc-500">{q.score}%</span>
-                <div className="w-full rounded-sm bg-zinc-800 relative" style={{ height: "60px" }}>
+                <span className="text-[9px] md:text-[10px] text-zinc-500">{q.score}%</span>
+                <div className="w-full rounded-sm bg-zinc-800 relative" style={{ height: "48px" }}>
                   <div
                     className="absolute bottom-0 w-full rounded-sm transition-all"
                     style={{ height: `${q.score}%`, background: q.score >= 80 ? "var(--foreground)" : q.score >= 50 ? "var(--muted)" : "var(--border)" }}
                   />
                 </div>
-                <span className="text-[9px] text-zinc-600">{q.date}</span>
+                <span className="text-[8px] md:text-[9px] text-zinc-600">{q.date}</span>
               </div>
             ))}
           </div>
@@ -235,22 +235,22 @@ export default function Dashboard() {
       )}
 
       {/* All Groups Grid */}
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-sm font-medium text-zinc-400">All Groups</h2>
-        <Link href="/groups" className="text-zinc-600 hover:text-zinc-400 text-xs">View All</Link>
+      <div className="mb-3 md:mb-4 flex items-center justify-between">
+        <h2 className="text-xs md:text-sm font-medium text-zinc-400">All Groups</h2>
+        <Link href="/groups" className="text-zinc-600 hover:text-zinc-400 text-[11px] md:text-xs">View All</Link>
       </div>
-      <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2">
+      <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-1.5 md:gap-2">
         {wordGroups.map((g) => {
           const gWords = g.words.map((w) => w.id);
           const learned = gWords.filter((id) => progress.words[id]?.known).length;
           const pct = Math.round((learned / g.words.length) * 100);
           return (
-            <Link key={g.id} href={`/groups/${g.id}`} className={`card p-2.5 text-center hover:bg-zinc-900 transition-colors ${pct === 100 ? "border-zinc-600" : ""}`}>
-              <p className="text-lg font-medium text-zinc-300">{g.id}</p>
-              <div className="mt-1.5 h-0.5 bg-zinc-800 rounded-full overflow-hidden">
+            <Link key={g.id} href={`/groups/${g.id}`} className={`card p-2 md:p-2.5 text-center hover:bg-zinc-900 transition-colors ${pct === 100 ? "border-zinc-600" : ""}`}>
+              <p className="text-sm md:text-lg font-medium text-zinc-300">{g.id}</p>
+              <div className="mt-1 md:mt-1.5 h-0.5 bg-zinc-800 rounded-full overflow-hidden">
                 <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: pct === 100 ? "var(--foreground)" : pct > 0 ? "var(--muted)" : "var(--border)" }} />
               </div>
-              <p className="text-[10px] text-zinc-600 mt-1">{learned}/{g.words.length}</p>
+              <p className="text-[9px] md:text-[10px] text-zinc-600 mt-0.5 md:mt-1">{learned}/{g.words.length}</p>
             </Link>
           );
         })}
@@ -261,10 +261,10 @@ export default function Dashboard() {
 
 function StatCard({ label, value, sub }: { label: string; value: string | number; sub: string }) {
   return (
-    <div className="card p-4">
-      <p className="text-[11px] text-zinc-600 uppercase tracking-wider mb-1">{label}</p>
-      <p className="text-xl font-semibold text-zinc-100">{value}</p>
-      <p className="text-xs text-zinc-600">{sub}</p>
+    <div className="card p-3 sm:p-4">
+      <p className="text-[10px] sm:text-[11px] text-zinc-600 uppercase tracking-wider mb-1">{label}</p>
+      <p className="text-lg sm:text-xl font-semibold text-zinc-100">{value}</p>
+      <p className="text-[11px] sm:text-xs text-zinc-600">{sub}</p>
     </div>
   );
 }

@@ -93,14 +93,14 @@ function WordRow({
         <div className="flex items-center gap-1.5 shrink-0">
           <button
             onClick={(e) => { e.stopPropagation(); speak(word.word); }}
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-zinc-600 hover:text-zinc-300 hover:bg-zinc-800 transition-colors opacity-0 group-hover:opacity-100"
+            className="w-9 h-9 rounded-lg flex items-center justify-center text-zinc-600 hover:text-zinc-300 hover:bg-zinc-800 transition-colors md:opacity-0 md:group-hover:opacity-100"
             title="Pronounce"
           >
             <SpeakerIcon />
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); onMark(word.id, status !== "known"); }}
-            className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
+            className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all ${
               status === "known"
                 ? "bg-green-950/40 text-green-400 border border-green-900/50 hover:bg-red-950/40 hover:text-red-400 hover:border-red-900/50"
                 : "bg-zinc-800 text-zinc-500 border border-zinc-700 hover:bg-green-950/40 hover:text-green-400 hover:border-green-900/50"
@@ -181,37 +181,37 @@ export default function GroupDetailPage() {
   });
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+    <div className="max-w-3xl mx-auto px-3 sm:px-4 md:px-6 py-4 md:py-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-5 gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 md:mb-5 gap-3">
         <div>
           <Link href="/groups" className="text-zinc-600 hover:text-zinc-400 text-xs mb-1 inline-block">
             ← Groups
           </Link>
-          <h1 className="text-2xl font-semibold text-zinc-100">{group.name}</h1>
-          <p className="text-zinc-500 text-sm">{group.words.length} words · {learned} learned</p>
+          <h1 className="text-xl sm:text-2xl font-semibold text-zinc-100">{group.name}</h1>
+          <p className="text-zinc-500 text-xs sm:text-sm">{group.words.length} words · {learned} learned</p>
         </div>
-        <div className="flex gap-1.5">
+        <div className="flex gap-1 sm:gap-1.5 flex-wrap">
           <button
             onClick={() => setViewMode("list")}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${viewMode === "list" ? "bg-zinc-800 text-zinc-200" : "text-zinc-600 hover:text-zinc-400"}`}
+            className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${viewMode === "list" ? "bg-zinc-800 text-zinc-200" : "text-zinc-600 hover:text-zinc-400"}`}
           >
             List
           </button>
           <button
             onClick={() => setViewMode("cards")}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${viewMode === "cards" ? "bg-zinc-800 text-zinc-200" : "text-zinc-600 hover:text-zinc-400"}`}
+            className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${viewMode === "cards" ? "bg-zinc-800 text-zinc-200" : "text-zinc-600 hover:text-zinc-400"}`}
           >
             Cards
           </button>
-          <Link href={`/flashcards?group=${groupId}`} className="btn-primary text-xs px-3 py-1.5">
+          <Link href={`/flashcards?group=${groupId}`} className="btn-primary text-xs px-2.5 sm:px-3 py-1.5">
             Practice
           </Link>
         </div>
       </div>
 
       {/* Progress bar + stats */}
-      <div className="mb-5">
+      <div className="mb-4 md:mb-5">
         <div className="flex items-center gap-3 mb-2">
           <div className="flex-1 h-2 bg-zinc-800 rounded-full overflow-hidden flex">
             <div

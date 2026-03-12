@@ -305,25 +305,25 @@ export default function AIPage() {
   ];
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+    <div className="max-w-3xl mx-auto px-3 sm:px-4 md:px-6 py-4 md:py-8">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-1">
-        <div className="w-9 h-9 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-300">
+      <div className="flex items-center gap-2 sm:gap-3 mb-1">
+        <div className="w-8 sm:w-9 h-8 sm:h-9 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-300">
           <SparkleIcon />
         </div>
         <div>
-          <h1 className="text-2xl font-semibold text-zinc-100">AI Assistant</h1>
+          <h1 className="text-xl sm:text-2xl font-semibold text-zinc-100">AI Assistant</h1>
         </div>
       </div>
-      <p className="text-zinc-500 text-sm mb-6 ml-12">Explore words, chat, or get personalized advice</p>
+      <p className="text-zinc-500 text-xs sm:text-sm mb-4 md:mb-6 ml-10 sm:ml-12">Explore words, chat, or get personalized advice</p>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-6 bg-zinc-900 p-1 rounded-lg w-fit border border-zinc-800">
+      <div className="flex gap-1 mb-4 md:mb-6 bg-zinc-900 p-1 rounded-lg w-fit border border-zinc-800 overflow-x-auto">
         {tabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => { setActiveTab(tab.key); setResult(null); }}
-            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-md text-xs font-medium transition-colors ${
+            className={`flex items-center gap-1 sm:gap-1.5 px-3 sm:px-4 py-1.5 rounded-md text-xs font-medium transition-colors whitespace-nowrap ${
               activeTab === tab.key
                 ? "bg-zinc-100 text-zinc-900"
                 : "text-zinc-500 hover:text-zinc-300"
@@ -512,7 +512,7 @@ export default function AIPage() {
 
       {/* ======================== CHAT TAB ======================== */}
       {activeTab === "chat" && (
-        <div className="card flex flex-col overflow-hidden" style={{ height: "65vh" }}>
+        <div className="card flex flex-col overflow-hidden" style={{ height: "calc(100vh - 220px)" }}>
           <div ref={chatRef} className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-thin">
             {messages.length === 0 && (
               <div className="flex flex-col items-center justify-center h-full text-center py-12">
@@ -591,7 +591,7 @@ export default function AIPage() {
       {activeTab === "recommend" && (
         <div>
           {/* Stats cards */}
-          <div className="grid grid-cols-3 gap-3 mb-5">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-5">
             {[
               { value: Object.values(progress.words).filter((w) => w.known).length, label: "Words Learned", color: "text-green-400" },
               { value: Object.values(progress.words).filter((w) => w.difficulty === "hard").length, label: "Hard Words", color: "text-amber-400" },

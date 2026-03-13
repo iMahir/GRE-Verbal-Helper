@@ -239,18 +239,18 @@ export default function Dashboard() {
         <h2 className="text-xs md:text-sm font-medium text-zinc-400">All Groups</h2>
         <Link href="/groups" className="text-zinc-600 hover:text-zinc-400 text-[11px] md:text-xs">View All</Link>
       </div>
-      <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-1.5 md:gap-2">
+      <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2">
         {wordGroups.map((g) => {
           const gWords = g.words.map((w) => w.id);
           const learned = gWords.filter((id) => progress.words[id]?.known).length;
           const pct = Math.round((learned / g.words.length) * 100);
           return (
-            <Link key={g.id} href={`/groups/${g.id}`} className={`card p-2 md:p-2.5 text-center hover:bg-zinc-900 transition-colors ${pct === 100 ? "border-zinc-600" : ""}`}>
+            <Link key={g.id} href={`/groups/${g.id}`} className={`card p-2.5 text-center min-h-[48px] hover:bg-zinc-900 transition-colors ${pct === 100 ? "border-zinc-600" : ""}`}>
               <p className="text-sm md:text-lg font-medium text-zinc-300">{g.id}</p>
-              <div className="mt-1 md:mt-1.5 h-0.5 bg-zinc-800 rounded-full overflow-hidden">
+              <div className="mt-1.5 h-0.5 bg-zinc-800 rounded-full overflow-hidden">
                 <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: pct === 100 ? "var(--foreground)" : pct > 0 ? "var(--muted)" : "var(--border)" }} />
               </div>
-              <p className="text-[9px] md:text-[10px] text-zinc-600 mt-0.5 md:mt-1">{learned}/{g.words.length}</p>
+              <p className="text-[9px] md:text-[10px] text-zinc-600 mt-1">{learned}/{g.words.length}</p>
             </Link>
           );
         })}

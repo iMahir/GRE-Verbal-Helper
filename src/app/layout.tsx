@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
@@ -11,6 +11,12 @@ const poppins = Poppins({
   subsets: ["latin"],
   weight: ["100", "300", "400", "500", "600", "700"],
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   title: "VerbalHelper — GRE Verbal",
@@ -32,7 +38,7 @@ export default function RootLayout({
           <AuthProvider>
             <Navbar />
             <OnboardingModal />
-            <main className="pt-0 pb-20 md:pt-14 md:pb-0 min-h-screen">{children}</main>
+            <main className="pt-0 pb-24 md:pt-14 md:pb-0 min-h-screen">{children}</main>
           </AuthProvider>
         </ThemeProvider>
       </body>

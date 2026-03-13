@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { wordGroups, allWords, type Word } from "@/data/words";
 import { useProgress } from "@/hooks/useProgress";
+import GroupSelector from "@/components/GroupSelector";
 
 interface AiEnrichment {
   distractors: string[];
@@ -316,35 +317,16 @@ export default function LearnPage() {
 
         <div className="mb-6">
           <h2 className="text-sm font-medium text-zinc-400 mb-3">Group</h2>
-          <div className="flex flex-wrap gap-1.5">
-            <button
-              onClick={() => setSelectedGroup(null)}
-              className={`px-3 py-2 rounded-md text-xs transition-colors ${
-                selectedGroup === null
-                  ? "bg-zinc-100 text-zinc-900"
-                  : "bg-zinc-900 text-zinc-500 hover:text-zinc-300 border border-zinc-800"
-              }`}
-            >
-              All ({allWords.length})
-            </button>
-            {wordGroups.map((g) => {
-              const gLearned = g.words.filter((w) => progress.words[w.id]?.known).length;
-              return (
-                <button
-                  key={g.id}
-                  onClick={() => setSelectedGroup(g.id)}
-                  className={`px-3 py-2 rounded-md text-xs transition-colors ${
-                    selectedGroup === g.id
-                      ? "bg-zinc-100 text-zinc-900"
-                      : "bg-zinc-900 text-zinc-500 hover:text-zinc-300 border border-zinc-800"
-                  }`}
-                >
-                  {g.id}
-                  {gLearned > 0 && <span className="ml-0.5 opacity-50">({gLearned})</span>}
-                </button>
-              );
-            })}
-          </div>
+          <GroupSelector
+            selectedGroup={selectedGroup}
+            onSelect={setSelectedGroup}
+            learnedCounts={Object.fromEntries(
+              wordGroups.map((g) => [
+                g.id,
+                g.words.filter((w) => progress.words[w.id]?.known).length,
+              ])
+            )}
+          />
         </div>
 
         <button onClick={startSession} className="btn-primary px-6 py-2.5">

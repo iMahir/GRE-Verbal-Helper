@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { wordGroups, allWords, type Word } from "@/data/words";
 import { useProgress } from "@/hooks/useProgress";
 import Flashcard from "@/components/Flashcard";
+import GroupSelector from "@/components/GroupSelector";
 
 type StudyMode = "all" | "unlearned" | "hard" | "review";
 
@@ -73,31 +74,7 @@ function FlashcardsInner() {
 
         <div className="mb-4 md:mb-6">
           <h2 className="text-xs md:text-sm font-medium text-zinc-400 mb-2 md:mb-3">Group</h2>
-          <div className="flex flex-wrap gap-1 sm:gap-1.5">
-            <button
-              onClick={() => setSelectedGroup(null)}
-              className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs transition-colors ${
-                selectedGroup === null
-                  ? "bg-zinc-100 text-zinc-900"
-                  : "bg-zinc-900 text-zinc-500 hover:text-zinc-300 border border-zinc-800"
-              }`}
-            >
-              All
-            </button>
-            {wordGroups.map((g) => (
-              <button
-                key={g.id}
-                onClick={() => setSelectedGroup(g.id)}
-                className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs transition-colors ${
-                  selectedGroup === g.id
-                    ? "bg-zinc-100 text-zinc-900"
-                    : "bg-zinc-900 text-zinc-500 hover:text-zinc-300 border border-zinc-800"
-                }`}
-              >
-                {g.id}
-              </button>
-            ))}
-          </div>
+          <GroupSelector selectedGroup={selectedGroup} onSelect={setSelectedGroup} />
         </div>
 
         <div className="mb-6 md:mb-8">
@@ -112,7 +89,7 @@ function FlashcardsInner() {
               <button
                 key={m.key}
                 onClick={() => setMode(m.key)}
-                className={`card p-2.5 md:p-3 text-left ${
+                className={`card p-3 text-left min-h-[48px] ${
                   mode === m.key ? "border-zinc-500 bg-zinc-900" : ""
                 }`}
               >
@@ -188,13 +165,13 @@ function FlashcardsInner() {
         <button
           onClick={() => setIndex(Math.max(0, index - 1))}
           disabled={index === 0}
-          className="text-zinc-600 hover:text-zinc-300 disabled:opacity-20 disabled:cursor-not-allowed text-xs py-2 px-3 -ml-3 rounded-lg"
+          className="text-zinc-600 hover:text-zinc-300 disabled:opacity-20 disabled:cursor-not-allowed text-sm py-3 px-4 -ml-4 rounded-lg min-h-[48px]"
         >
           ← Previous
         </button>
         <button
           onClick={() => handleNext(false)}
-          className="text-zinc-600 hover:text-zinc-300 text-xs py-2 px-3 -mr-3 rounded-lg"
+          className="text-zinc-600 hover:text-zinc-300 text-sm py-3 px-4 -mr-4 rounded-lg min-h-[48px]"
         >
           Skip →
         </button>

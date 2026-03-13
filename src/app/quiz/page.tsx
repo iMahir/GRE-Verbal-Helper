@@ -4,6 +4,7 @@ import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { wordGroups, allWords, type Word } from "@/data/words";
 import { useProgress } from "@/hooks/useProgress";
+import GroupSelector from "@/components/GroupSelector";
 
 type QuizType = "definition" | "word";
 
@@ -192,31 +193,7 @@ export default function QuizPage() {
 
         <div className="mb-6">
           <h2 className="text-sm font-medium text-zinc-400 mb-3">Group</h2>
-          <div className="flex flex-wrap gap-1.5">
-            <button
-              onClick={() => setSelectedGroup(null)}
-              className={`px-3 py-2 rounded-md text-xs transition-colors ${
-                selectedGroup === null
-                  ? "bg-zinc-100 text-zinc-900"
-                  : "bg-zinc-900 text-zinc-500 hover:text-zinc-300 border border-zinc-800"
-              }`}
-            >
-              All
-            </button>
-            {wordGroups.map((g) => (
-              <button
-                key={g.id}
-                onClick={() => setSelectedGroup(g.id)}
-                className={`px-3 py-2 rounded-md text-xs transition-colors ${
-                  selectedGroup === g.id
-                    ? "bg-zinc-100 text-zinc-900"
-                    : "bg-zinc-900 text-zinc-500 hover:text-zinc-300 border border-zinc-800"
-                }`}
-              >
-                {g.id}
-              </button>
-            ))}
-          </div>
+          <GroupSelector selectedGroup={selectedGroup} onSelect={setSelectedGroup} />
         </div>
 
         <div className="mb-6">
@@ -224,7 +201,7 @@ export default function QuizPage() {
           <div className="grid grid-cols-2 gap-2 max-w-sm">
             <button
               onClick={() => setQuizType("definition")}
-              className={`card p-3 text-left ${
+              className={`card p-3 text-left min-h-[48px] ${
                 quizType === "definition" ? "border-zinc-500 bg-zinc-900" : ""
               }`}
             >
@@ -233,7 +210,7 @@ export default function QuizPage() {
             </button>
             <button
               onClick={() => setQuizType("word")}
-              className={`card p-3 text-left ${
+              className={`card p-3 text-left min-h-[48px] ${
                 quizType === "word" ? "border-zinc-500 bg-zinc-900" : ""
               }`}
             >
@@ -250,7 +227,7 @@ export default function QuizPage() {
               <button
                 key={n}
                 onClick={() => setQuestionCount(n)}
-                className={`px-3 py-2 rounded-md text-xs transition-colors ${
+                className={`px-4 py-2.5 rounded-md text-xs min-h-[44px] transition-colors ${
                   questionCount === n
                     ? "bg-zinc-100 text-zinc-900"
                     : "bg-zinc-900 text-zinc-500 hover:text-zinc-300 border border-zinc-800"

@@ -14,6 +14,7 @@ const allLinks = [
   { href: "/quiz", label: "Quiz", icon: "✎" },
   { href: "/ai", label: "AI", icon: "◆" },
   { href: "/weak-words", label: "Review", icon: "↻" },
+  { href: "/reading", label: "Reading", icon: "≡" },
 ];
 
 // Primary tabs shown directly in the bottom bar

@@ -48,7 +48,11 @@ export default function PdfViewer({ url, title, onClose }: PdfViewerProps) {
   const prevPage = () => setPageNumber((p) => Math.max(p - 1, 1));
   const nextPage = () => setPageNumber((p) => Math.min(p + 1, numPages));
 
-  const proxyUrl = `/api/pdf-proxy?url=${encodeURIComponent(url)}`;
+  // Internal API routes (starting with "/") are used directly;
+  // external URLs go through the CORS proxy.
+  const proxyUrl = url.startsWith("/")
+    ? url
+    : `/api/pdf-proxy?url=${encodeURIComponent(url)}`;
 
   return (
     <div className="fixed inset-0 z-[100] flex flex-col bg-zinc-950">
@@ -102,7 +106,7 @@ export default function PdfViewer({ url, title, onClose }: PdfViewerProps) {
             {loading && (
               <div className="flex flex-col items-center justify-center py-20 gap-4">
                 <div className="w-12 h-12 rounded-full border-2 border-zinc-700 border-t-zinc-300 animate-spin" />
-                <p className="text-zinc-500 text-sm">Loading newspaper...</p>
+                <p className="text-zinc-500 text-sm">Loading PDF...</p>
               </div>
             )}
             <div className={loading ? "opacity-0 pointer-events-none" : ""}>

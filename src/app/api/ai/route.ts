@@ -11,7 +11,7 @@ async function chatCompletion(messages: { role: string; content: string }[]) {
       Authorization: `Bearer ${API_KEY}`,
     },
     body: JSON.stringify({
-      model: "auto",
+      model: "gemini-flash-lite",
       messages,
       max_tokens: 1024,
     }),

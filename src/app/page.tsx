@@ -80,6 +80,11 @@ export default function Dashboard() {
   const dailyPercent = dailyGoal.target > 0
     ? Math.min(100, Math.round((dailyGoal.wordsToday / dailyGoal.target) * 100))
     : 0;
+  const today = new Date().toISOString().split("T")[0];
+  const dailyCompletedGroups = progress.dailyGroupQuiz?.date === today
+    ? progress.dailyGroupQuiz.completedGroups.length
+    : 0;
+  const dailyDueGroups = Math.max(0, wordGroups.length - dailyCompletedGroups);
 
   return (
     <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 py-4 md:py-8">
@@ -140,7 +145,13 @@ export default function Dashboard() {
             </Link>
             <Link href="/quiz" className="block p-2.5 md:p-3 rounded-lg border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900 transition-colors">
               <p className="text-xs md:text-sm font-medium text-zinc-200">Quiz</p>
-              <p className="text-[11px] md:text-xs text-zinc-600">Test your knowledge</p>
+              <p className="text-[11px] md:text-xs text-zinc-600">{dailyDueGroups} daily groups remaining</p>
+            </Link>
+            <Link href="/quiz?daily=1" className="block p-2.5 md:p-3 rounded-lg border border-amber-900/60 bg-amber-950/20 hover:bg-amber-950/30 transition-colors">
+              <p className="text-xs md:text-sm font-medium text-amber-200">Daily Group Challenge</p>
+              <p className="text-[11px] md:text-xs text-amber-300/70">
+                Definition match for every group each day
+              </p>
             </Link>
             {stats.reviewDue > 0 && (
               <Link href="/weak-words" className="block p-2.5 md:p-3 rounded-lg border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900 transition-colors">

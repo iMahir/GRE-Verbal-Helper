@@ -28,6 +28,11 @@ export interface DailyGoal {
   date: string;
 }
 
+export interface DailyGroupQuizProgress {
+  date: string;
+  completedGroups: number[];
+}
+
 export interface ActivityDay {
   date: string;
   count: number;
@@ -40,6 +45,7 @@ export interface UserProgress {
   lastActive: string;
   totalWordsLearned: number;
   dailyGoal: DailyGoal;
+  dailyGroupQuiz: DailyGroupQuizProgress;
   activityLog: ActivityDay[];
 }
 
@@ -61,6 +67,7 @@ function getDefaultProgress(): UserProgress {
     lastActive: "",
     totalWordsLearned: 0,
     dailyGoal: { target: 20, wordsToday: 0, date: "" },
+    dailyGroupQuiz: { date: "", completedGroups: [] },
     activityLog: [],
   };
 }
@@ -73,6 +80,7 @@ function loadProgress(): UserProgress {
       const parsed = JSON.parse(raw);
       // Migrate old data
       if (!parsed.dailyGoal) parsed.dailyGoal = { target: 20, wordsToday: 0, date: "" };
+      if (!parsed.dailyGroupQuiz) parsed.dailyGroupQuiz = { date: "", completedGroups: [] };
       if (!parsed.activityLog) parsed.activityLog = [];
       return parsed;
     }
@@ -128,6 +136,23 @@ function mergeProgress(local: UserProgress, db: UserProgress): UserProgress {
     .sort((a, b) => a.date.localeCompare(b.date))
     .slice(-90);
 
+  const localDailyQuiz = local.dailyGroupQuiz || { date: "", completedGroups: [] };
+  const dbDailyQuiz = db.dailyGroupQuiz || { date: "", completedGroups: [] };
+  const mergedDailyQuiz =
+    localDailyQuiz.date === dbDailyQuiz.date
+      ? {
+          date: localDailyQuiz.date,
+          completedGroups: Array.from(
+            new Set([
+              ...(localDailyQuiz.completedGroups || []),
+              ...(dbDailyQuiz.completedGroups || []),
+            ])
+          ).sort((a, b) => a - b),
+        }
+      : localDailyQuiz.date > dbDailyQuiz.date
+        ? localDailyQuiz
+        : dbDailyQuiz;
+
   return {
     words: mergedWords,
     quizHistory: mergedQuiz.sort((a, b) => a.date.localeCompare(b.date)),
@@ -135,6 +160,7 @@ function mergeProgress(local: UserProgress, db: UserProgress): UserProgress {
     lastActive: local.lastActive > (db.lastActive || "") ? local.lastActive : db.lastActive || "",
     totalWordsLearned: Object.values(mergedWords).filter((w) => w.known).length,
     dailyGoal: local.dailyGoal.date >= (db.dailyGoal?.date || "") ? local.dailyGoal : db.dailyGoal || local.dailyGoal,
+    dailyGroupQuiz: mergedDailyQuiz,
     activityLog: mergedActivity,
   };
 }
@@ -268,6 +294,29 @@ export function useProgress() {
     [progress, save]
   );
 
+  const markGroupQuizDone = useCallback(
+    (groupId: number) => {
+      const p = { ...progress };
+      const today = new Date().toISOString().split("T")[0];
+      const completedToday =
+        p.dailyGroupQuiz.date === today ? p.dailyGroupQuiz.completedGroups : [];
+      if (completedToday.includes(groupId)) return;
+      p.dailyGroupQuiz = {
+        date: today,
+        completedGroups: [...completedToday, groupId].sort((a, b) => a - b),
+      };
+      save(p);
+    },
+    [progress, save]
+  );
+
+  const getDailyGroupQuizCompleted = useCallback((): number[] => {
+    const today = new Date().toISOString().split("T")[0];
+    return progress.dailyGroupQuiz.date === today
+      ? progress.dailyGroupQuiz.completedGroups
+      : [];
+  }, [progress]);
+
   const getWordProgress = useCallback(
     (wordId: string): WordProgress | undefined => {
       return progress.words[wordId];
@@ -297,6 +346,8 @@ export function useProgress() {
     progress,
     updateWord,
     addQuizResult,
+    markGroupQuizDone,
+    getDailyGroupQuizCompleted,
     getWordProgress,
     getGroupProgress,
     getReviewWords,

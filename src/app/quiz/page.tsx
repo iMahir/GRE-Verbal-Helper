@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { wordGroups, allWords, type Word } from "@/data/words";
 import { useProgress } from "@/hooks/useProgress";
 import GroupSelector from "@/components/GroupSelector";
-import { useSearchParams } from "next/navigation";
 
 type QuizType = "definition" | "word";
 
@@ -51,8 +50,7 @@ function generateQuestions(
 }
 
 export default function QuizPage() {
-  const { progress, updateWord, addQuizResult, markGroupQuizDone, getDailyGroupQuizCompleted } = useProgress();
-  const searchParams = useSearchParams();
+  const { updateWord, addQuizResult, markGroupQuizDone, getDailyGroupQuizCompleted } = useProgress();
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
   const [quizType, setQuizType] = useState<QuizType>("definition");
   const [questionCount, setQuestionCount] = useState(10);
@@ -81,14 +79,6 @@ export default function QuizPage() {
       localStorage.setItem("vm-ai-sentences", JSON.stringify(sentenceCache.current));
     } catch { /* ignore */ }
   }, []);
-
-  const pool = useMemo(
-    () =>
-      selectedGroup
-        ? wordGroups.find((g) => g.id === selectedGroup)?.words || []
-        : allWords,
-    [selectedGroup]
-  );
 
   const dailyDueGroups = useMemo(() => {
     const completed = new Set(getDailyGroupQuizCompleted());
@@ -133,11 +123,6 @@ export default function QuizPage() {
     });
   }, [dailyDueGroups, startQuiz]);
 
-  useEffect(() => {
-    if (started || searchParams.get("daily") !== "1" || dailyDueGroups.length === 0) return;
-    startDailyQuiz();
-  }, [searchParams, started, dailyDueGroups.length, startDailyQuiz]);
-
   const handleSelect = useCallback(
     (idx: number) => {
       if (selected !== null) return;
@@ -178,7 +163,7 @@ export default function QuizPage() {
           .finally(() => setLoadingSentence(false));
       }
     },
-    [selected, questions, currentQ, updateWord]
+    [selected, questions, currentQ, updateWord, saveSentenceCache]
   );
 
   const handleNext = useCallback(() => {

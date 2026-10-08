@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import ThemeProvider from "@/components/ThemeProvider";
 import OnboardingModal from "@/components/OnboardingModal";
 import { AuthProvider } from "@/components/AuthProvider";
+import DailyQuizReminder from "@/components/DailyQuizReminder";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -38,6 +39,7 @@ export default function RootLayout({
           <AuthProvider>
             <Navbar />
             <OnboardingModal />
+            <DailyQuizReminder />
             <main className="pt-0 pb-24 md:pt-14 md:pb-0 min-h-screen">{children}</main>
           </AuthProvider>
         </ThemeProvider>

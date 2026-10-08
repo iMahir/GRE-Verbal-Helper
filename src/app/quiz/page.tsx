@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { wordGroups, allWords, type Word } from "@/data/words";
 import { useProgress } from "@/hooks/useProgress";
 import GroupSelector from "@/components/GroupSelector";
+import { useSearchParams } from "next/navigation";
 
 type QuizType = "definition" | "word";
 
@@ -50,11 +51,13 @@ function generateQuestions(
 }
 
 export default function QuizPage() {
-  const { progress, updateWord, addQuizResult } = useProgress();
+  const { progress, updateWord, addQuizResult, markGroupQuizDone, getDailyGroupQuizCompleted } = useProgress();
+  const searchParams = useSearchParams();
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
   const [quizType, setQuizType] = useState<QuizType>("definition");
   const [questionCount, setQuestionCount] = useState(10);
   const [started, setStarted] = useState(false);
+  const [dailyModeSession, setDailyModeSession] = useState(false);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [currentQ, setCurrentQ] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
@@ -87,8 +90,29 @@ export default function QuizPage() {
     [selectedGroup]
   );
 
-  const startQuiz = useCallback(() => {
-    const qs = generateQuestions(pool, allWords, questionCount, quizType);
+  const dailyDueGroups = useMemo(() => {
+    const completed = new Set(getDailyGroupQuizCompleted());
+    return wordGroups.filter((g) => !completed.has(g.id));
+  }, [getDailyGroupQuizCompleted]);
+
+  const startQuiz = useCallback((config?: {
+    groupId?: number | null;
+    type?: QuizType;
+    count?: number;
+    dailyMode?: boolean;
+  }) => {
+    const chosenGroup = config?.groupId ?? selectedGroup;
+    const chosenType = config?.type ?? quizType;
+    const chosenCount = config?.count ?? questionCount;
+    const chosenPool = chosenGroup
+      ? wordGroups.find((g) => g.id === chosenGroup)?.words || []
+      : allWords;
+    const qs = generateQuestions(chosenPool, allWords, chosenCount, chosenType);
+    if (chosenPool.length === 0 || qs.length === 0) return;
+    setSelectedGroup(chosenGroup ?? null);
+    setQuizType(chosenType);
+    setQuestionCount(chosenCount);
+    setDailyModeSession(Boolean(config?.dailyMode));
     setQuestions(qs);
     setCurrentQ(0);
     setScore(0);
@@ -96,7 +120,23 @@ export default function QuizPage() {
     setAnswers([]);
     setShowResult(false);
     setStarted(true);
-  }, [pool, questionCount, quizType]);
+  }, [selectedGroup, questionCount, quizType]);
+
+  const startDailyQuiz = useCallback(() => {
+    const nextGroup = dailyDueGroups[0];
+    if (!nextGroup) return;
+    startQuiz({
+      groupId: nextGroup.id,
+      type: "definition",
+      count: Math.min(10, nextGroup.words.length),
+      dailyMode: true,
+    });
+  }, [dailyDueGroups, startQuiz]);
+
+  useEffect(() => {
+    if (started || searchParams.get("daily") !== "1" || dailyDueGroups.length === 0) return;
+    startDailyQuiz();
+  }, [searchParams, started, dailyDueGroups.length, startDailyQuiz]);
 
   const handleSelect = useCallback(
     (idx: number) => {
@@ -155,9 +195,12 @@ export default function QuizPage() {
         groupId: selectedGroup || undefined,
         mode: quizType,
       });
+      if (dailyModeSession && selectedGroup && quizType === "definition") {
+        markGroupQuizDone(selectedGroup);
+      }
       setShowResult(true);
     }
-  }, [currentQ, questions.length, score, selectedGroup, quizType, addQuizResult]);
+  }, [currentQ, questions.length, score, selectedGroup, quizType, addQuizResult, dailyModeSession, markGroupQuizDone]);
 
   // Keyboard shortcuts for quiz
   const selectedRef = useRef<number | null>(null);
@@ -189,7 +232,26 @@ export default function QuizPage() {
     return (
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         <h1 className="text-2xl font-semibold text-zinc-100 mb-1">Quiz</h1>
-        <p className="text-zinc-500 text-sm mb-8">Test your vocabulary knowledge</p>
+        <p className="text-zinc-500 text-sm mb-8">Daily definition-match practice by group</p>
+
+        <div className="card p-4 mb-6 border-amber-800/40 bg-amber-950/20">
+          <p className="text-xs uppercase tracking-wider text-amber-300 mb-1">Daily mission</p>
+          <p className="text-sm text-amber-100 mb-3">
+            Complete a definition match quiz for every group every day.
+          </p>
+          <p className="text-xs text-amber-200/80 mb-3">
+            {dailyDueGroups.length === 0
+              ? "All group quizzes completed for today."
+              : `${dailyDueGroups.length} groups still need a quiz today.`}
+          </p>
+          <button
+            onClick={startDailyQuiz}
+            disabled={dailyDueGroups.length === 0}
+            className="btn-primary px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {dailyDueGroups.length === 0 ? "Daily mission complete" : `Start Group ${dailyDueGroups[0].id}`}
+          </button>
+        </div>
 
         <div className="mb-6">
           <h2 className="text-sm font-medium text-zinc-400 mb-3">Group</h2>
@@ -198,7 +260,7 @@ export default function QuizPage() {
 
         <div className="mb-6">
           <h2 className="text-sm font-medium text-zinc-400 mb-3">Type</h2>
-          <div className="grid grid-cols-2 gap-2 max-w-sm">
+          <div className="max-w-sm">
             <button
               onClick={() => setQuizType("definition")}
               className={`card p-3 text-left min-h-[48px] ${
@@ -207,15 +269,6 @@ export default function QuizPage() {
             >
               <p className="text-sm font-medium text-zinc-200">Definition Match</p>
               <p className="text-[11px] text-zinc-600">Word → pick definition</p>
-            </button>
-            <button
-              onClick={() => setQuizType("word")}
-              className={`card p-3 text-left min-h-[48px] ${
-                quizType === "word" ? "border-zinc-500 bg-zinc-900" : ""
-              }`}
-            >
-              <p className="text-sm font-medium text-zinc-200">Word Match</p>
-              <p className="text-[11px] text-zinc-600">Definition → pick word</p>
             </button>
           </div>
         </div>
@@ -283,10 +336,23 @@ export default function QuizPage() {
           </div>
         )}
 
+        {dailyModeSession && (
+          <p className="text-xs text-amber-300 mb-6">
+            {dailyDueGroups.length === 0
+              ? "You finished all group quizzes for today."
+              : `${dailyDueGroups.length} group quizzes are still due today.`}
+          </p>
+        )}
+
         <div className="flex gap-3 justify-center">
-          <button onClick={() => setStarted(false)} className="btn-secondary">
+          <button onClick={() => { setStarted(false); setDailyModeSession(false); }} className="btn-secondary">
             New Quiz
           </button>
+          {dailyModeSession && dailyDueGroups.length > 0 && (
+            <button onClick={startDailyQuiz} className="btn-primary">
+              Next Daily Group
+            </button>
+          )}
           <button onClick={startQuiz} className="btn-primary">
             Try Again
           </button>
@@ -307,7 +373,7 @@ export default function QuizPage() {
     <div className="max-w-2xl mx-auto px-3 sm:px-4 md:px-6 py-4 md:py-8">
       <div className="flex items-center justify-between mb-4 md:mb-6">
         <button
-          onClick={() => setStarted(false)}
+          onClick={() => { setStarted(false); setDailyModeSession(false); }}
           className="text-zinc-600 hover:text-zinc-300 text-xs"
         >
           ✕ End
@@ -315,7 +381,9 @@ export default function QuizPage() {
         <p className="text-[11px] sm:text-xs text-zinc-500">
           {currentQ + 1} / {questions.length}
         </p>
-        <p className="text-[11px] sm:text-xs text-zinc-400">{score} correct</p>
+        <p className="text-[11px] sm:text-xs text-zinc-400">
+          {score} correct{dailyModeSession && selectedGroup ? ` · Group ${selectedGroup}` : ""}
+        </p>
       </div>
 
       <div className="w-full h-1 bg-zinc-800 rounded-full overflow-hidden mb-6 md:mb-8">
